@@ -1,0 +1,1 @@
+go build -o sshagent.exe -ldflags="-s -w"
