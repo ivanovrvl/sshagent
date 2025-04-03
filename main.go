@@ -11,12 +11,28 @@ func main() {
 
 	forwardHandler := &ssh.ForwardedTCPHandler{}
 
+	signer, err := ReadPemFile("key.pk")
+	if err != nil {
+		panic(err)
+	}
+
+	authorizedKeysData, err := os.ReadFile("authorized_keys")
+	if err != nil {
+		panic(err)
+	}
+
+	authorizedKeys, _, _, _, err := ssh.ParseAuthorizedKey(authorizedKeysData)
+	if err != nil {
+		panic(err)
+	}
+
 	server := ssh.Server{
 		LocalPortForwardingCallback: ssh.LocalPortForwardingCallback(func(ctx ssh.Context, dhost string, dport uint32) bool {
 			//log.Println("Accepted forward", dhost, dport)
 			return false
 		}),
-		Addr: ":567",
+		Addr:        ":567",
+		HostSigners: []ssh.Signer{signer},
 		//Handler: ssh.Handler(func(s ssh.Session) {
 		//	io.WriteString(s, "wsefrtergwvrwgvrtgvbrtfgvtrfd...\n")
 		//	select {}
@@ -36,9 +52,7 @@ func main() {
 			return false
 		},
 		PublicKeyHandler: func(ctx ssh.Context, key ssh.PublicKey) bool {
-			data, _ := os.ReadFile("authorized_keys")
-			allowed, _, _, _, _ := ssh.ParseAuthorizedKey(data)
-			return ssh.KeysEqual(key, allowed)
+			return ssh.KeysEqual(key, authorizedKeys)
 		},
 	}
 
