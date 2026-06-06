@@ -11,11 +11,6 @@ func main() {
 
 	forwardHandler := &ssh.ForwardedTCPHandler{}
 
-	signer, err := ReadPemFile("key.pk")
-	if err != nil {
-		panic(err)
-	}
-
 	authorizedKeysData, err := os.ReadFile("authorized_keys")
 	if err != nil {
 		panic(err)
@@ -31,8 +26,8 @@ func main() {
 			//log.Println("Accepted forward", dhost, dport)
 			return false
 		}),
-		Addr:        ":567",
-		HostSigners: []ssh.Signer{signer},
+		Addr: ":567",
+		//HostSigners: []ssh.Signer{signer},
 		//Handler: ssh.Handler(func(s ssh.Session) {
 		//	io.WriteString(s, "wsefrtergwvrwgvrtgvbrtfgvtrfd...\n")
 		//	select {}
@@ -55,6 +50,8 @@ func main() {
 			return ssh.KeysEqual(key, authorizedKeys)
 		},
 	}
+
+	server.SetOption(ssh.HostKeyFile("key.pk"))
 
 	log.Fatal(server.ListenAndServe())
 }
