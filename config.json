@@ -1,0 +1,13 @@
+{
+    "bindAddr": ":2222",
+    "proxyType": "http",
+    "proxyHost": "127.0.0.1",
+    "proxyPort": 1080,
+    "proxyPwd": "1",
+    "keyFile": "server.pk",
+    "users": {
+        "user": {
+            "pwd": "1"
+        }
+    }
+}
