@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"io"
 	"net"
 	"strconv"
@@ -50,7 +51,7 @@ func readBlock(r io.Reader, buf []byte) error {
 
 func handle(err error) error {
 	if err != nil {
-
+		fmt.Println(err.Error())
 	}
 	return err
 }
