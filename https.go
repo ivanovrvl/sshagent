@@ -21,6 +21,7 @@ func basicAuth(username, password string) string {
 func HttpsTCPIPHandler(srv *ssh.Server, conn *gossh.ServerConn, newChan gossh.NewChannel, ctx ssh.Context) {
 	d := localForwardChannelData{}
 	if err := gossh.Unmarshal(newChan.ExtraData(), &d); err != nil {
+		handle(err)
 		newChan.Reject(gossh.ConnectionFailed, "error parsing forward data: "+err.Error())
 		return
 	}
@@ -36,6 +37,7 @@ func HttpsTCPIPHandler(srv *ssh.Server, conn *gossh.ServerConn, newChan gossh.Ne
 	var dialer net.Dialer
 	dconn, err := dialer.DialContext(ctx, "tcp", dest)
 	if err != nil {
+		handle(err)
 		dconn.Close()
 		newChan.Reject(gossh.ConnectionFailed, err.Error())
 		return
@@ -83,6 +85,7 @@ func HttpsTCPIPHandler(srv *ssh.Server, conn *gossh.ServerConn, newChan gossh.Ne
 	}
 
 	if err != nil {
+		handle(err)
 		dconn.Close()
 		newChan.Reject(gossh.ConnectionFailed, err.Error())
 		return
@@ -90,6 +93,7 @@ func HttpsTCPIPHandler(srv *ssh.Server, conn *gossh.ServerConn, newChan gossh.Ne
 
 	ch, reqs, err := newChan.Accept()
 	if err != nil {
+		handle(err)
 		dconn.Close()
 		return
 	}
