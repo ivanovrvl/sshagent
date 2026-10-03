@@ -111,8 +111,8 @@ func Socks5TCPIPHandler(srv *ssh.Server, conn *gossh.ServerConn, newChan gossh.N
 	// RFC1929 читаем результат аутентификации
 	err = readBlock(dconn, resp2[:])
 	if err == nil {
-		if resp2[0] != 5 {
-			err = errors.New("ver=0x5 is expected")
+		if resp2[0] != 1 && resp2[0] != 5 {
+			err = errors.New("ver=0x1 is expected")
 		} else if resp2[1] != 0 {
 			err = errors.New("Auth failed with code " + hex.EncodeToString(resp2[1:2]))
 		}
