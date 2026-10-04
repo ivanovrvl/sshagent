@@ -14,13 +14,14 @@ type User struct {
 }
 
 type ConfigObject struct {
-	BindAddr  string          `json:"bindAddr"`
-	ProxyType string          `json:"proxyType"`
-	ProxyHost string          `json:"proxyHost"`
-	ProxyPort int             `json:"proxyPort"`
-	ProxyPwd  string          `json:"proxyPwd"`
-	Users     map[string]User `json:"users"`
-	KeyFile   string          `json:"keyFile"`
+	BindAddr    string          `json:"bindAddr"`
+	ProxyType   string          `json:"proxyType"`
+	ProxyHost   string          `json:"proxyHost"`
+	ProxyPort   int             `json:"proxyPort"`
+	ProxyPwd    string          `json:"proxyPwd"`
+	Users       map[string]User `json:"users"`
+	KeyFile     string          `json:"keyFile"`
+	UseUserKeys bool            `json:"useUserKeys"`
 }
 
 func LoadConfig() error {

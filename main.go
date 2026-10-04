@@ -40,6 +40,25 @@ func main() {
 		panic(errors.New("Unsupported proxyType= " + Config.ProxyType))
 	}
 
+	var publicKeyHandler ssh.PublicKeyHandler = nil
+	if Config.UseUserKeys {
+		publicKeyHandler = func(ctx ssh.Context, key ssh.PublicKey) bool {
+			user, ok := Config.Users[ctx.User()]
+			if !ok {
+				return false
+			}
+			if len(user.Key) == 0 {
+				return false
+			}
+			authorizedKey, _, _, _, err := ssh.ParseAuthorizedKey(([]byte)(user.Key))
+			if err != nil {
+				handle(err)
+				return false
+			}
+			return ssh.KeysEqual(key, authorizedKey)
+		}
+	}
+
 	server := ssh.Server{
 		LocalPortForwardingCallback: ssh.LocalPortForwardingCallback(func(ctx ssh.Context, dhost string, dport uint32) bool {
 			//log.Println("Accepted forward", dhost, dport)
@@ -76,22 +95,7 @@ func main() {
 		SessionRequestCallback: func(sess ssh.Session, requestType string) bool {
 			return false
 		},
-		/*
-			PublicKeyHandler: func(ctx ssh.Context, key ssh.PublicKey) bool {
-				user, ok := config.Users[ctx.User()]
-				if !ok {
-					return false
-				}
-				if len(user.Key) == 0 {
-					return false
-				}
-				authorizedKey, _, _, _, err := ssh.ParseAuthorizedKey(([]byte)(user.Key))
-				if err != nil {
-					panic(err)
-				}
-				return ssh.KeysEqual(key, authorizedKey)
-			},
-		*/
+		PublicKeyHandler: publicKeyHandler,
 	}
 
 	if len(Config.KeyFile) != 0 {
