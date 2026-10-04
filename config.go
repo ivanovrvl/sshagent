@@ -8,9 +8,9 @@ import (
 var Config *ConfigObject
 
 type User struct {
-	Pwd        string `json:"pwd"`
-	Key        string `json:"key"`
-	RemotePort bool   `json:"remotePort"`
+	Pwd             string `json:"pwd"`
+	Key             string `json:"key"`
+	AllowRemotePort bool   `json:"allowPort"`
 }
 
 type ConfigObject struct {

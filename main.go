@@ -53,7 +53,7 @@ func main() {
 		//}),
 		ReversePortForwardingCallback: ssh.ReversePortForwardingCallback(func(ctx ssh.Context, host string, port uint32) bool {
 			user, ok := Config.Users[ctx.User()]
-			if !ok || !user.RemotePort {
+			if !ok || !user.AllowRemotePort {
 				return false
 			}
 			log.Println("attempt to bind", host, port, "granted")
