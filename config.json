@@ -6,7 +6,7 @@
     "proxyPwd": "1",
     "keyFile": "server.pk",
     "users": {
-        "user": {
+        "user1": {
             "pwd": "1"
         }
     }
